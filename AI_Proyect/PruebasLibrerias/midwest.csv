@@ -1,0 +1,16 @@
+name,age,apple_pie?,potato_salad?,sushi?,midwest?
+Jeff,32,0,1,1,1
+Pete,25,1,1,0,1
+Anne,33,1,1,0,1
+Natalie,26,0,0,1,0
+Stella,30,1,1,1,1
+Rob,25,1,0,0,1
+Joe,42,1,1,0,1
+Jim,38,1,1,0,1
+Lisa,36,1,1,0,0
+Sarah,29,1,0,1,0
+David,35,1,0,0,1
+Eric,28,1,1,1,0
+Mike,20,1,1,0,1
+Karen,38,0,0,0,1
+Megan,31,1,0,1,0
