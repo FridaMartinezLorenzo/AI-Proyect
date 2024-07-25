@@ -17,10 +17,6 @@ df = df.drop_duplicates()
 df['Dport'] = df['Dport'].astype('object')
 categorical_columns = df.select_dtypes(include=['object']).columns
 
-#listEx = list(df['SrcMac'])
-#print("Checking without set", len(listEx))
-#print("Checking", len(set(listEx)))
-
 
 # We aply the LabelEncoder in the cathegorical_columns
 label_encoders = {}

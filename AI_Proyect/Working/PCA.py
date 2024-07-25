@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler 
 from sklearn.decomposition import PCA
 
 EHMS = pd.read_csv('../WUSTL-EHMS/wustl-ehms-2020.csv')
