@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
 EHMS = pd.read_csv('../WUSTL-EHMS/wustl-ehms-2020.csv')
@@ -28,7 +28,11 @@ for col in categorical_columns:
 
 
 # Aply the Min-Max Scaling to all the columns
-scaler = MinMaxScaler()
+#scaler = MinMaxScaler()
+#df[df.columns] = scaler.fit_transform(df[df.columns])
+
+# Apply StandardScaler to all the columns
+scaler = StandardScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
 
 #Show the dataframe
