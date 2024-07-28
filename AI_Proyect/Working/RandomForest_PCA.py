@@ -4,7 +4,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold, cross_val_score
 
 # Load the dataset
-EHMS = pd.read_csv('dataset_PCA.csv')
+#EHMS = pd.read_csv('dataset_PCA.csv')
+EHMS = pd.read_csv('dataset_selected_features.csv')
 df = pd.DataFrame(EHMS)
 
 # Define features and target
@@ -26,6 +27,3 @@ print(f'Mean cross-validation score: {np.mean(scores)}')
 
 # Train the Random Forest model on the entire dataset
 rf.fit(X, y)
-
-
-print("\nRandom Forest model trained and saved.")
