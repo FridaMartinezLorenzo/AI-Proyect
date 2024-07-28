@@ -48,10 +48,11 @@ X_pca = pca.fit_transform(df)
 
 # Create a new DataFrame with the principal components
 feature_names = [f'PC_{i+1}' for i in range(n_components)]
+
 df_pca = pd.DataFrame(X_pca, columns=feature_names)
 
-# Display the new DataFrame
-print(df_pca)
+# Add the label column
+df_pca = pd.concat([df_pca, label_column], axis=1)
 
 # Save the new dataset
 df_pca.to_csv('dataset_PCA.csv', index=False)
