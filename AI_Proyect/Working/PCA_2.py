@@ -28,6 +28,7 @@ for col in categorical_columns:
 label_column = df[['Label']]
 df = df.drop(columns=["Label"])
 
+
 # Apply StandardScaler to all the columns
 scaler = StandardScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
