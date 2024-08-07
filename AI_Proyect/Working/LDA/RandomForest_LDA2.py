@@ -5,8 +5,8 @@ from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_score, recall_score
 
 # Load the dataset
-EHMS_train = pd.read_csv('train_lda.csv')
-EHMS_test = pd.read_csv('test_lda.csv')
+EHMS_train = pd.read_csv('train_lda2.csv')
+EHMS_test = pd.read_csv('test_lda2.csv')
 
 df_train = pd.DataFrame(EHMS_train)
 df_test = pd.DataFrame(EHMS_test)

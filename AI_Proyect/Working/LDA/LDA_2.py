@@ -1,8 +1,8 @@
-#LDA WITH STANDARD SCALING
+#LDA WITH MIN-MAX SCALING
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
@@ -31,8 +31,8 @@ for col in categorical_columns:
 label_column = df[['Label']]
 df = df.drop(columns=["Label"])
 
-# Scale the features
-scaler = StandardScaler()
+# Aply the Min-Max Scaling to all the columns
+scaler = MinMaxScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
 
 # Split the dataset into training and test sets
@@ -55,6 +55,6 @@ test_lda_df = pd.DataFrame(X_test_lda, columns=[f'LDA_feature_{i+1}' for i in ra
 test_lda_df['label'] = y_test
 
 # Save the DataFrames to CSV files
-train_lda_df.to_csv('train_lda1.csv', index=False)
-test_lda_df.to_csv('test_lda1.csv', index=False)
+train_lda_df.to_csv('train_lda2.csv', index=False)
+test_lda_df.to_csv('test_lda2.csv', index=False)
 
