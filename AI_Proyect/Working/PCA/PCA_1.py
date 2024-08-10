@@ -95,10 +95,20 @@ print("\nFrequency of each main feature:\n", feature_counts)
 # We are going to work with these new features, so we are going to redo the dataset with only these features
 df_selected_features = df[unique_features]
 
+#Considering the biomedical data, we are going  to count how many features are biomedical
+biometric_columns = ['Temp', 'SpO2', 'Pulse_Rate', 'SYS', 'DIA', 'Heart_rate', 'Resp_Rate','ST']
+number_of_biometric_features = len(df_selected_features.columns.intersection(biometric_columns))
+
+print("\n______________________________________________________\n Counting the number of biometric features\n______________________________________________________")
+print("\nNumber of biometric features:", number_of_biometric_features)
+print("Number of network flow features:", len(df_selected_features.columns) - number_of_biometric_features)
+
 # Add the label column
 df_selected_features = pd.concat([df_selected_features, label_column], axis=1)
 
 # Save the new dataset with selected features
 df_selected_features.to_csv('dataset_selected_features_MINMAX.csv', index=False)
 print("\nDataset with selected features saved.")
+
+
 

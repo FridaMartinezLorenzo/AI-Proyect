@@ -30,10 +30,10 @@ for col in categorical_columns:
 label_column = df[['Label']]
 df = df.drop(columns=["Label"])
 
+
 # Scale the features
 scaler = MinMaxScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
-
 # Split the label and features
 X = df
 y = label_column.values.ravel()  # Flatten the array
@@ -54,15 +54,45 @@ feature_importances_df = pd.DataFrame({
 
 print(feature_importances_df)
 
+# Save feature importances to a CSV file
+try:
+    feature_importances_df.to_csv('feature_importances2_df.csv', index=False)
+    print("Feature importances saved successfully to 'feature_importances_df.csv'")
+except Exception as e:
+    print(f"Error saving feature importances: {e}")
+
 # Select the most important features
-threshold = 0.1  # Importance threshold
+threshold = 0.01  # Importance threshold
 important_features = feature_importances_df[feature_importances_df['Importance'] > threshold]['Feature']
 print("Most important features:", important_features.tolist())
 
 # Filter the dataset with the selected features
+X_important = df[important_features]
+X_important = pd.concat([X_important, label_column], axis=1)
+
+#print(X_important)
+#Considering the biomedical data, we are going  to count how many features are biomedical
+biometric_columns = ['Temp', 'SpO2', 'Pulse_Rate', 'SYS', 'DIA', 'Heart_rate', 'Resp_Rate','ST']
+number_of_biometric_features = len(X_important.columns.intersection(biometric_columns))
+
+print("\n______________________________________________________\n Counting the number of biometric features\n______________________________________________________")
+print("\nNumber of biometric features:", number_of_biometric_features)
+print("Number of network flow features:", len(X_important.columns) - number_of_biometric_features)
+
+
+# Save the filtered dataset to a new CSV file
+try:
+    X_important.to_csv('filtered_dataset2.csv', index=False)
+    print("Filtered dataset saved successfully to 'filtered_dataset.csv'")
+except Exception as e:
+    print(f"Error saving filtered dataset: {e}")
+
+# Further steps for training and evaluating the model using selected features
 X_train_important = X_train[important_features]
 X_test_important = X_test[important_features]
 
+print("X_train_important")
+print(X_train_important)
 # Train a new model with the selected features
 rf_important = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_important.fit(X_train_important, y_train)
