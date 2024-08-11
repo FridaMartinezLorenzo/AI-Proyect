@@ -12,10 +12,10 @@ y = df[['Label']]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-
 #Add the label column to the train and test datasets
-X_train = pd.concat([X_train, y], axis=1)
-X_test = pd.concat([X_test, y], axis=1)
+X_train = pd.concat([X_train, y_train], axis=1)
+X_test = pd.concat([X_test, y_test], axis=1)
+
 
 #We save on a csv file the train and test datasets
 X_train = X_train.to_csv('train_Standard.csv', index=False)

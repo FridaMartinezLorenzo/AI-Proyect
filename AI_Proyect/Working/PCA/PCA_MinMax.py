@@ -1,18 +1,23 @@
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
 
 # Load the dataset
-EHMS = pd.read_csv('../dataset_pre_processed_minmax.csv')
+EHMS = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
 df = pd.DataFrame(EHMS)
 
 # Split the dataset into features and labels
-X = df.drop(columns=['Label'])
-y = df[['Label']]
+X = df.drop(columns=['Label'])  # Asegúrate de que 'Label' esté presente en los datos
+y = df['Label']  # Extrae la columna de etiquetas correctamente
 
-# Apply PCA
+# Impute missing values with the mean
+imputer = SimpleImputer(strategy='mean')
+X = imputer.fit_transform(X)
+
+# Apply PCA to the features only
 pca = PCA()
-pca.fit(df)
+pca.fit(X)
 
 # Select the number of principal components to explain 95% of the variance
 explained_variance = np.cumsum(pca.explained_variance_ratio_)
@@ -22,15 +27,14 @@ print(f'Number of principal components to explain 95% of the variance: {n_compon
 
 # Initialize PCA with the selected number of components
 pca = PCA(n_components=n_components)
-X_pca = pca.fit_transform(df)
+X_pca = pca.fit_transform(X)
 
 # Create a new DataFrame with the principal components
 feature_names = [f'PC_{i+1}' for i in range(n_components)]
-
 df_pca = pd.DataFrame(X_pca, columns=feature_names)
 
 # Add the label column
-df_pca = pd.concat([df_pca, y], axis=1)
+df_pca = pd.concat([df_pca, y.reset_index(drop=True)], axis=1)
 
 # Save the new dataset
 df_pca.to_csv('dataset_PCA_MINMAX.csv', index=False)
@@ -41,7 +45,7 @@ print("\nVariance (Eigenvalues):\n", pca.explained_variance_)
 print("\nProportion of Variance:\n", pca.explained_variance_ratio_)
 
 # Map the principal components back to the original feature names
-loading_scores = pd.DataFrame(pca.components_.T, index=df.columns, columns=feature_names)
+loading_scores = pd.DataFrame(pca.components_.T, index=df.columns[:-1], columns=feature_names)
 print("\nLoading Scores:\n", loading_scores)
 
 # List to store the names of the main features
@@ -71,8 +75,8 @@ print("\nFrequency of each main feature:\n", feature_counts)
 # We are going to work with these new features, so we are going to redo the dataset with only these features
 df_selected_features = df[unique_features]
 
-#Considering the biomedical data, we are going  to count how many features are biomedical
-biometric_columns = ['Temp', 'SpO2', 'Pulse_Rate', 'SYS', 'DIA', 'Heart_rate', 'Resp_Rate','ST']
+# Considering the biomedical data, we are going to count how many features are biomedical
+biometric_columns = ['Temp', 'SpO2', 'Pulse_Rate', 'SYS', 'DIA', 'Heart_rate', 'Resp_Rate', 'ST']
 number_of_biometric_features = len(df_selected_features.columns.intersection(biometric_columns))
 
 print("\n______________________________________________________\n Counting the number of biometric features\n______________________________________________________")
@@ -80,11 +84,10 @@ print("\nNumber of biometric features:", number_of_biometric_features)
 print("Number of network flow features:", len(df_selected_features.columns) - number_of_biometric_features)
 
 # Add the label column
-df_selected_features = pd.concat([df_selected_features, y], axis=1)
+df_selected_features = pd.concat([df_selected_features, y.reset_index(drop=True)], axis=1)
 
 # Save the new dataset with selected features
 df_selected_features.to_csv('dataset_selected_features_MINMAX.csv', index=False)
 print("\nDataset with selected features saved.")
-
 
 

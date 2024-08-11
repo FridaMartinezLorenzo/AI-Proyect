@@ -11,6 +11,8 @@ df = pd.DataFrame(EHMS)
 # Split the dataset into training and test sets
 X_train = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
 X_test = pd.read_csv('../TrainTest/Split/test_MinMax.csv')
+X_train = X_train.drop(columns=['Label'])
+X_test = X_test.drop(columns=['Label'])
 y_train = X_train[['Label']]
 y_test = X_test[['Label']]
 
