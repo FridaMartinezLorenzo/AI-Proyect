@@ -9,7 +9,6 @@ from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_s
 EHMS = pd.read_csv('dataset_selected_features_MINMAX.csv')
 df = pd.DataFrame(EHMS)
 
-print("dataset_PCA.csv")
 # Define features and target
 X = df.drop(columns=['Label'])
 y = df['Label']
@@ -26,6 +25,9 @@ scores = cross_val_score(rf, X, y, cv=kf, scoring='accuracy')
 # Print cross-validation scores
 print(f'Cross-validation scores: {scores}')
 print(f'Mean cross-validation score: {np.mean(scores)}')
+
+
+
 
 # Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
