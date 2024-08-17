@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
 
-
 EHMS = pd.read_csv('../WUSTL-EHMS/wustl-ehms-2020.csv')
 df = pd.DataFrame(EHMS)
 
@@ -18,6 +17,9 @@ df['Dport'] = df['Dport'].astype('object')
 categorical_columns = df.select_dtypes(include=['object']).columns
 
 
+label_column = df['Label']
+df = df.drop(['Label'], axis=1)
+
 # We aply the LabelEncoder in the cathegorical_columns
 label_encoders = {}
 for col in categorical_columns:
@@ -28,13 +30,18 @@ for col in categorical_columns:
 
 
 # Aply the Min-Max Scaling to all the columns
-scaler = MinMaxScaler()
-df[df.columns] = scaler.fit_transform(df[df.columns])
+#scaler = MinMaxScaler()
+#df[df.columns] = scaler.fit_transform(df[df.columns])
 
 # Apply StandardScaler to all the columns
 
-#scaler = StandardScaler()
-#df[df.columns] = scaler.fit_transform(df[df.columns])
+scaler = StandardScaler()
+df[df.columns] = scaler.fit_transform(df[df.columns])
+
+
+
+#We add the label column
+df= pd.concat([df, label_column], axis=1)
 
 #Show the dataframe
 #print(df.head())
@@ -42,5 +49,5 @@ df[df.columns] = scaler.fit_transform(df[df.columns])
 print(df)
 
 #We save the new dataset
-df.to_csv('dataset_pre_processed_minmax.csv', index=False)
-#df.to_csv('dataset_pre_processed_standard.csv', index=False)
+#df.to_csv('dataset_pre_processed_minmax.csv', index=False)
+df.to_csv('dataset_pre_processed_standard.csv', index=False)

@@ -6,7 +6,7 @@ EHMS = pd.read_csv('../../dataset_pre_processed_standard.csv')
 df = pd.DataFrame(EHMS)
 
 # Split the dataset into features and labels
-X = df
+X = df.drop(columns=['Label'])
 y = df[['Label']]
 
 

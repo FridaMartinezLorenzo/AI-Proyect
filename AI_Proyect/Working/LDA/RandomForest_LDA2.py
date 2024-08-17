@@ -12,11 +12,11 @@ df_train = pd.DataFrame(EHMS_train)
 df_test = pd.DataFrame(EHMS_test)
 
 # Separate features and labels
-X_train = df_train.drop('label', axis=1)
-y_train = df_train['label']
+X_train = df_train.drop('Label', axis=1)
+y_train = df_train['Label']
 
-X_test = df_test.drop('label', axis=1)
-y_test = df_test['label']
+X_test = df_test.drop('Label', axis=1)
+y_test = df_test['Label']
 
 # Initialize RandomForestClassifier
 rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)

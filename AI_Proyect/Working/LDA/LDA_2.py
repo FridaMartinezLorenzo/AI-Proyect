@@ -11,10 +11,10 @@ df = pd.DataFrame(EHMS)
 # Split the dataset into training and test sets
 X_train = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
 X_test = pd.read_csv('../TrainTest/Split/test_MinMax.csv')
-X_train = X_train.drop(columns=['Label'])
-X_test = X_test.drop(columns=['Label'])
 y_train = X_train[['Label']]
 y_test = X_test[['Label']]
+X_train = X_train.drop(columns=['Label'])
+X_test = X_test.drop(columns=['Label'])
 
 # Convert y_train and y_test to 1D arrays
 y_train = np.ravel(y_train)
@@ -27,12 +27,14 @@ X_test_lda = lda.transform(X_test)
 
 # Create DataFrame for the reduced features
 train_lda_df = pd.DataFrame(X_train_lda, columns=[f'LDA_feature_{i+1}' for i in range(X_train_lda.shape[1])])
-train_lda_df['label'] = y_train
+train_lda_df['Label'] = y_train
 
 test_lda_df = pd.DataFrame(X_test_lda, columns=[f'LDA_feature_{i+1}' for i in range(X_test_lda.shape[1])])
-test_lda_df['label'] = y_test
+test_lda_df['Label'] = y_test
 
 # Save the DataFrames to CSV files
 train_lda_df.to_csv('train_lda2.csv', index=False)
 test_lda_df.to_csv('test_lda2.csv', index=False)
+
+
 
