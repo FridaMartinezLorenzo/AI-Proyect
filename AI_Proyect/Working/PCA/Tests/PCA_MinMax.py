@@ -4,7 +4,7 @@ from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 
 # Load the dataset
-EHMS = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
+EHMS = pd.read_csv('../../TrainTest/Split/train_MinMax.csv')
 df = pd.DataFrame(EHMS)
 
 # Split the dataset into features and labels

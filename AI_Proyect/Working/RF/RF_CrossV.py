@@ -1,3 +1,7 @@
+# This code was adapted from an example in the scikit-learn documentation.
+# We modified the code to suit our specific needs, evaluating the model 
+# using cross-validation and selecting the best hyperparameters.
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier

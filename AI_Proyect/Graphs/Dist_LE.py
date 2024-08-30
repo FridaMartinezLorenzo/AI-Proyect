@@ -4,15 +4,15 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-# Cargar datos
+# Load data
 EHMS = pd.read_csv('../WUSTL-EHMS/wustl-ehms-2020.csv')
 df = pd.DataFrame(EHMS)
 
-# Eliminar columnas irrelevantes y duplicados
+# Drop irrelevant columns and duplicates
 df = df.drop(['Dir', 'Flgs'], axis=1)
 df = df.drop_duplicates()
 
-# Identificar columnas categóricas
+# Identify categorical columns
 df['Dport'] = df['Dport'].astype('object')
 categorical_columns = df.select_dtypes(include=['object']).columns
 
@@ -21,52 +21,50 @@ df_original = df.copy()
 label_column = df['Label']
 df = df.drop(['Label'], axis=1)
 
-print("Columnas categóricas antes del Label Encoding:", df)
+print("Categorical columns before Label Encoding:", df)
 
-# Aplicar LabelEncoder en columnas categóricas
+# Apply LabelEncoder on categorical columns
 label_encoders = {}
 for col in categorical_columns:
     le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
     label_encoders[col] = le
 
-print("Columnas después del Label Encoding:", df)
+print("Columns after Label Encoding:", df)
 
-# Seleccionar solo columnas numéricas para calcular la correlación
+# Select only numeric columns to calculate the correlation
 df_numeric = df.select_dtypes(include=[np.number])
 
-# Configurar el tamaño de fuente general
+# Set the general font size
 sns.set(font_scale=0.7)
 
-# Matriz de correlación antes del Label Encoding
+# Correlation matrix before Label Encoding
 df_original_numeric = df_original.select_dtypes(include=[np.number])
 plt.figure(figsize=(10, 8))
-plt.title("Matriz de correlación antes del Label Encoding", fontsize=10)
+plt.title("Correlation Matrix before Label Encoding", fontsize=10)
 sns.heatmap(df_original_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap='coolwarm')
 plt.savefig('Dist_no_LE.png')
 plt.show()
 
-
-
-# Matriz de correlación después del Label Encoding
-print("Number of numeric columns: ", len(df_numeric.columns))
+# Correlation matrix after Label Encoding
+print("Number of numeric columns:", len(df_numeric.columns))
 plt.figure(figsize=(10, 8))
-plt.title("Matriz de correlación después del Label Encoding", fontsize=10)
+plt.title("Correlation Matrix after Label Encoding", fontsize=10)
 sns.heatmap(df_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap='coolwarm')
 plt.savefig('Dist_LE.png')
 plt.show()
 
 """
-Aplicar la normalización a todas las columnas
-"""
+Apply normalization to all columns
 
-# Aplicar StandardScaler a todas las columnas
+# Apply StandardScaler to all columns
 scaler = StandardScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
 
-# Agregar la columna de etiquetas
+# Add the label column
 df = pd.concat([df, label_column], axis=1)
 
+"""
 # Graficar la distribución de las columnas antes y después de la normalización
 #for column in df.columns[:-1]:  # Excluye la columna de etiquetas
 #    fig, ax = plt.subplots(1, 2, figsize=(16, 6))

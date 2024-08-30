@@ -6,7 +6,7 @@ from sklearn.pipeline import make_pipeline
 import matplotlib.pyplot as plt
 
 # Load the dataset
-EHMS = pd.read_csv('../../WUSTL-EHMS/wustl-ehms-2020.csv')
+EHMS = pd.read_csv('../../../WUSTL-EHMS/wustl-ehms-2020.csv')
 df = pd.DataFrame(EHMS)
 
 # Drop unnecessary columns

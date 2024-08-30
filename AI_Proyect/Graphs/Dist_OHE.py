@@ -4,15 +4,15 @@ from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-# Cargar datos
+# Load data
 EHMS = pd.read_csv('../WUSTL-EHMS/wustl-ehms-2020.csv')
 df = pd.DataFrame(EHMS)
 
-# Eliminar columnas irrelevantes y duplicados
+# Drop irrelevant columns and duplicates
 df = df.drop(['Dir', 'Flgs'], axis=1)
 df = df.drop_duplicates()
 
-# Identificar columnas categóricas
+# Identify categorical columns
 df['Dport'] = df['Dport'].astype('object')
 categorical_columns = df.select_dtypes(include=['object']).columns
 
@@ -21,42 +21,40 @@ df_original = df.copy()
 label_column = df['Label']
 df = df.drop(['Label'], axis=1)
 
-# Verificar columnas categóricas
-print("Columnas categóricas antes de One-Hot Encoding:", categorical_columns)
+# Check categorical columns
+print("Categorical columns before One-Hot Encoding:", categorical_columns)
 
-# Aplicar One-Hot Encoding en columnas categóricas
+# Apply One-Hot Encoding on categorical columns
 df = pd.get_dummies(df, columns=categorical_columns)
 
-# Convertir columnas booleanas (0, 1) a tipo int
+# Convert boolean columns (0, 1) to int type
 df = df.astype(int)
 
-# Verificar la conversión
-print("Columnas después de One-Hot Encoding:", df.columns)
+# Verify the conversion
+print("Columns after One-Hot Encoding:", df.columns)
 
-# Verificar el número de columnas
-print("Número de columnas después de One-Hot Encoding:", len(df.columns))
+# Verify the number of columns
+print("Number of columns after One-Hot Encoding:", len(df.columns))
 
-# Seleccionar solo columnas numéricas para calcular la correlación
+# Select only numeric columns to calculate correlation
 df_numeric = df.select_dtypes(include=[np.number])
 
-print("Número de columnas numéricas después del One-Hot Encoding:", len(df_numeric.columns))
+print("Number of numeric columns after One-Hot Encoding:", len(df_numeric.columns))
 
-# Configurar el tamaño de fuente general
+# Set the general font size
 sns.set(font_scale=0.7)
 
-# Matriz de correlación antes del One-Hot Encoding
+# Correlation matrix before One-Hot Encoding
 df_original_numeric = df_original.select_dtypes(include=[np.number])
 plt.figure(figsize=(10, 8))
-plt.title("Matriz de correlación antes del One-Hot Encoding", fontsize=10)
+plt.title("Correlation Matrix before One-Hot Encoding", fontsize=10)
 sns.heatmap(df_original_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap='coolwarm')
 plt.savefig('Dist_no_OHE.png')
 plt.show()
 
-# Matriz de correlación después del One-Hot Encoding
+# Correlation matrix after One-Hot Encoding
 plt.figure(figsize=(10, 8))
-plt.title("Matriz de correlación después del One-Hot Encoding", fontsize=10)
+plt.title("Correlation Matrix after One-Hot Encoding", fontsize=10)
 sns.heatmap(df_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap='coolwarm')
 plt.savefig('Dist_OHE.png')
 plt.show()
-
-
