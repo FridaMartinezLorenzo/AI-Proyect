@@ -40,7 +40,13 @@ y_test = y_test.values.ravel()
 feature_names = X_train.columns
 
 # Train the Random Forest model
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf = RandomForestClassifier(n_estimators=166,
+                            max_depth=10,
+                            min_samples_split=9,
+                            min_samples_leaf=3,
+                            max_features='log2',
+                            bootstrap=True,
+                            random_state=42)
 rf.fit(X_train_imputed, y_train)
 
 # Get the feature importances
@@ -94,7 +100,13 @@ except Exception as e:
     print(f"\nError saving filtered datasets: {e}")
 
 # Train a new model with the selected features
-rf_important = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_important = RandomForestClassifier(n_estimators=166,
+                                      max_depth=10,
+                                      min_samples_split=9,
+                                      min_samples_leaf=3,
+                                      max_features='log2',
+                                      bootstrap=True,
+                                      random_state=42)
 rf_important.fit(X_train_important, y_train)
 
 # Predict and evaluate the model

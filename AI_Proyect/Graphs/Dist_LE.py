@@ -21,13 +21,17 @@ df_original = df.copy()
 label_column = df['Label']
 df = df.drop(['Label'], axis=1)
 
+print("Columnas categóricas antes del Label Encoding:", df)
+
 # Aplicar LabelEncoder en columnas categóricas
 label_encoders = {}
 for col in categorical_columns:
     le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
     label_encoders[col] = le
-    
+
+print("Columnas después del Label Encoding:", df)
+
 # Seleccionar solo columnas numéricas para calcular la correlación
 df_numeric = df.select_dtypes(include=[np.number])
 
@@ -42,7 +46,10 @@ sns.heatmap(df_original_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap=
 plt.savefig('Dist_no_LE.png')
 plt.show()
 
+
+
 # Matriz de correlación después del Label Encoding
+print("Number of numeric columns: ", len(df_numeric.columns))
 plt.figure(figsize=(10, 8))
 plt.title("Matriz de correlación después del Label Encoding", fontsize=10)
 sns.heatmap(df_numeric.corr(), annot=True, annot_kws={"size": 4}, cmap='coolwarm')
@@ -61,16 +68,16 @@ df[df.columns] = scaler.fit_transform(df[df.columns])
 df = pd.concat([df, label_column], axis=1)
 
 # Graficar la distribución de las columnas antes y después de la normalización
-for column in df.columns[:-1]:  # Excluye la columna de etiquetas
-    fig, ax = plt.subplots(1, 2, figsize=(16, 6))
-
-    # Histograma de la columna original
-    sns.histplot(data=df_original, x=column, kde=True, ax=ax[0])
-    ax[0].title.set_text(f'Distribución Original de {column}')
-
-    # Histograma de la columna normalizada
-    sns.histplot(data=df, x=column, kde=True, ax=ax[1])
-    ax[1].title.set_text(f'Distribución Normalizada de {column}')
-
-    plt.savefig(f'Normalization/Dist_{column}.png')
-    #plt.show()
+#for column in df.columns[:-1]:  # Excluye la columna de etiquetas
+#    fig, ax = plt.subplots(1, 2, figsize=(16, 6))
+#
+#    # Histograma de la columna original
+#    sns.histplot(data=df_original, x=column, kde=True, ax=ax[0])
+#    ax[0].title.set_text(f'Distribución Original de {column}')
+#
+#    # Histograma de la columna normalizada
+#    sns.histplot(data=df, x=column, kde=True, ax=ax[1])
+#    ax[1].title.set_text(f'Distribución Normalizada de {column}')
+#
+#    plt.savefig(f'Normalization/Dist_{column}.png')
+#    #plt.show()

@@ -22,7 +22,27 @@ y_test = np.ravel(y_test)
 
 # Apply LDA
 lda = LDA(n_components=1)  # Adjust n_components as needed
-X_train_lda = lda.fit_transform(X_train, y_train)
+lda.fit(X_train, y_train)
+
+# Get the feature coefficients
+feature_importance = lda.coef_[0]
+
+# Create a DataFrame to display feature importance
+importance_df = pd.DataFrame({
+    'Feature': X_train.columns,
+    'Coefficient': feature_importance
+}).sort_values(by='Coefficient', ascending=False)
+
+# Display the features and their corresponding coefficients
+#print(importance_df)
+
+# Display the top 10 features and their corresponding coefficients
+top_10_features = importance_df.head(10)
+print(top_10_features)
+
+
+# Transform the dataset using LDA
+X_train_lda = lda.transform(X_train)
 X_test_lda = lda.transform(X_test)
 
 # Create DataFrame for the reduced features
@@ -31,7 +51,6 @@ train_lda_df['Label'] = y_train
 
 test_lda_df = pd.DataFrame(X_test_lda, columns=[f'LDA_feature_{i+1}' for i in range(X_test_lda.shape[1])])
 test_lda_df['Label'] = y_test
-
 # Save the DataFrames to CSV files
 train_lda_df.to_csv('train_lda1.csv', index=False)
 test_lda_df.to_csv('test_lda1.csv', index=False)

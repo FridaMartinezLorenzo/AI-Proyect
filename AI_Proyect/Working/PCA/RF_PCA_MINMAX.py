@@ -21,7 +21,6 @@ X_train = imputer.fit_transform(X_train)
 X_test = imputer.transform(X_test)
 
 # Handle missing values in the target labels
-# Option 1: Drop rows with missing labels
 non_nan_train_indices = ~y_train.isna()
 non_nan_test_indices = ~y_test.isna()
 
@@ -45,6 +44,18 @@ print(f'Number of principal components to explain 95% of the variance: {n_compon
 pca = PCA(n_components=n_components)
 X_train_pca = pca.fit_transform(X_train)
 X_test_pca = pca.transform(X_test)
+
+# Matrix of principal components (loading scores)
+loading_scores = pca.components_
+
+loading_scores_df = pd.DataFrame(loading_scores, columns=train_data.columns[:-1])
+
+# Show the characteristics that contribute the most to each principal component
+for i in range(n_components):
+    pc_contribution = loading_scores_df.iloc[i].abs().sort_values(ascending=False)
+    print(f"Top contributing features to PC{i+1}:")
+    print(pc_contribution.head(10))
+    print("\n")
 
 # Initialize the Random Forest classifier
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
