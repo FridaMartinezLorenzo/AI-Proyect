@@ -79,3 +79,36 @@ shap.plots.waterfall(shap_values[0,:,0])
 
 # waterfall plot for class 1
 shap.plots.waterfall(shap_values[0,:,1])
+
+
+# calculate mean SHAP values for each class
+mean_0 = np.mean(np.abs(shap_values.values[:,:,0]),axis=0)
+mean_1 = np.mean(np.abs(shap_values.values[:,:,1]),axis=0)
+
+df = pd.DataFrame({'No intrusion':mean_0,'Intrusion':mean_1,})
+
+# plot mean SHAP values
+fig,ax = plt.subplots(1,1,figsize=(20,10))
+df.plot.bar(ax=ax)
+
+ax.set_ylabel('Mean SHAP',size = 10)
+ax.set_xticklabels(X.columns,rotation=45,size=10, fontsize=5)
+ax.legend(fontsize=15)
+plt.show()
+
+
+# get model predictions
+preds = rf.predict(X)
+
+new_shap_values = []
+for i, pred in enumerate(preds):
+    # get shap values for predicted class
+    new_shap_values.append(shap_values.values[i][:,pred])
+    
+# replace shap values
+shap_values.values = np.array(new_shap_values)
+print(shap_values.shape)
+
+shap.plots.bar(shap_values)
+
+shap.plots.beeswarm(shap_values)
