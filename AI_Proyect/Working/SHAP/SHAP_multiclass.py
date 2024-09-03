@@ -6,28 +6,28 @@ import shap
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import ConfusionMatrixDisplay
 
-#Load the entire dataset
+# Cargar el dataset completo
 EHMS = pd.read_csv('../dataset_pre_processed_minmax.csv')
 df = pd.DataFrame(EHMS)
 
-# Load the training and testing datasets
+X = df.drop(columns=['Label'])
+y = df['Label']
+
+# Cargar los datasets de entrenamiento y prueba
 train_data = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
 test_data = pd.read_csv('../TrainTest/Split/test_MinMax.csv')
 
-# Split the data into features and labels
+# Dividir los datos en características y etiquetas
 X_train = train_data.drop(columns=['Label'])
 X_test = test_data.drop(columns=['Label'])
 y_train = train_data['Label']
 y_test = test_data['Label']
 
-# Convert y to a one-dimensional array
+# Convertir y a un array unidimensional
 y_train = y_train.values.ravel()
 y_test = y_test.values.ravel()
 
-# Get the feature names
-feature_names = X_train.columns
-
-# Train the Random Forest model
+# Entrenar el modelo Random Forest
 rf = RandomForestClassifier(n_estimators=166,
                             max_depth=10,
                             min_samples_split=9,
@@ -37,71 +37,45 @@ rf = RandomForestClassifier(n_estimators=166,
                             random_state=42)
 rf.fit(X_train, y_train)
 
+# Imprimir la precisión del entrenamiento
 print(f'Training accuracy: {rf.score(X_train, y_train)}')
 
-# Get the feature importances
-feature_importances = rf.feature_importances_
-feature_importances_df = pd.DataFrame({
-    'Feature': feature_names,
-    'Importance': feature_importances
-}).sort_values(by='Importance', ascending=False)
+# Importancia de las características
+importances = rf.feature_importances_
+index =  np.argsort(importances)
+features = df.columns
 
-print(feature_importances_df)
+plt.title('Feature Importances')
+plt.barh(range(len(index)), importances[index], color='g', align='center')
+plt.yticks(range(len(index)), [features[i] for i in index], fontsize=5)
+plt.xlabel('Relative Importance')
+plt.show()
 
-# Select the most important features
-threshold = 0.01  # Importance threshold
-important_features = feature_importances_df[feature_importances_df['Importance'] > threshold]['Feature']
-print("Most important features:", important_features.tolist())
+# Matriz de confusión
+class_names = np.unique(y)
+disp = ConfusionMatrixDisplay.from_estimator(rf, X_test, y_test, display_labels=class_names, cmap=plt.cm.Blues, xticks_rotation='vertical')
+plt.show()
 
-# Filter the dataset with the valid features using Pandas DataFrame selection
-X_train_important = X_train[important_features]
-X_test_important = X_test[important_features]
+# Imprimir la distribución de las etiquetas
+print(y.value_counts())
 
-# Train the Random Forest model again with the important features
-rf_important = RandomForestClassifier(n_estimators=166,
-                                      max_depth=10,
-                                      min_samples_split=9,
-                                      min_samples_leaf=3,
-                                      max_features='log2',
-                                      bootstrap=True,
-                                      random_state=42)
-rf_important.fit(X_train_important, y_train)
+# SHAP summary plot
 
-# Class names for confusion matrix
-class_names = np.unique(y_test)
+# Calcular los valores SHAP
+explainer = shap.TreeExplainer(rf)
+shap_values = explainer(X)
 
+print("Shap dimension:", shap_values.shape)  # Debería ser (16318, 41, 2) si hay dos clases
+print("X dimension:", X.shape)  # Debería ser (16318, 41)
 
-# Display the value counts for the target variable
-#print(y_test.value_counts())
+# Visualizar el SHAP waterfall plot para la primera instancia de la clase 0 (no ataque)
+#shap.plots.waterfall(shap_values[0][0])
 
-# Compute SHAP values
-explainer = shap.TreeExplainer(rf_important)
-shap_values = explainer.shap_values(X_train)
+# Si quieres visualizar la explicación SHAP para la clase 1 (ataque), usa:
+# shap.plots.waterfall(shap_values[1][0])
 
-# Generate SHAP summary plot
-# If you want to plot for each class separately, you can do that as well:
-for i in range(len(class_names)):
-    shap.summary_plot(shap_values[i], X_test, plot_type="bar", class_names=class_names, feature_names=X_test.columns, show=False)
-    plt.title(f'SHAP Summary for Class: {class_names[i]}')
-    plt.show()
-    
+#waterfall plot for class 0
+shap.plots.waterfall(shap_values[0,:,0])
 
-shap.summary_plot(shap_values[1], X_test.values, feature_names = X_test.columns)
-
-"""
-print(shap_values)
-
-# Check the correct shape of SHAP values
-for i, class_name in enumerate(class_names):
-    print(f"Plotting SHAP summary for class: {class_name}")
-    
-    print(f"SHAP values shape for class {class_name}: {shap_values[i].shape}")
-    print(f"X_test_important shape: {X_test_important.shape}") 
-    
-    # Plotting SHAP summary if shapes match
-    if shap_values[i].shape == X_test_important.shape:
-        shap.summary_plot(shap_values[i], X_test_important, plot_type="bar", feature_names=X_test_important.columns)
-    else:
-        print(f"Shape mismatch for class {class_name}: Cannot plot SHAP summary.")
-
-"""
+# waterfall plot for class 1
+shap.plots.waterfall(shap_values[0,:,1])
