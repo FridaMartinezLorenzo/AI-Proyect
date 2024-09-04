@@ -4,10 +4,11 @@ from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_score, recall_score
+import plotly.express as px
 
 # Load the train and test datasets
-train_data = pd.read_csv('../TrainTest/Split/train_Standard.csv')
-test_data = pd.read_csv('../TrainTest/Split/test_Standard.csv')
+train_data = pd.read_csv('../TrainTest/Split/train_MinMax.csv')
+test_data = pd.read_csv('../TrainTest/Split/test_MinMax.csv')
 
 # Extract features and labels from train and test datasets
 X_train = train_data.drop(columns=['Label'])
@@ -21,7 +22,6 @@ X_train = imputer.fit_transform(X_train)
 X_test = imputer.transform(X_test)
 
 # Handle missing values in the target labels
-# Option 1: Drop rows with missing labels
 non_nan_train_indices = ~y_train.isna()
 non_nan_test_indices = ~y_test.isna()
 
@@ -57,6 +57,15 @@ for i in range(n_components):
     print(f"Top contributing features to PC{i+1}:")
     print(pc_contribution.head(10))
     print("\n")
+
+# Visualización de la distribución de los datos después de aplicar PCA
+fig = px.scatter(x=X_train_pca[:, 0], y=X_train_pca[:, 1], color=y_train)
+fig.update_layout(
+    title="PCA visualization of Custom Classification dataset",
+    xaxis_title="First Principal Component",
+    yaxis_title="Second Principal Component",
+)
+fig.show()
 
 # Initialize the Random Forest classifier
 rf = RandomForestClassifier(n_estimators=100, random_state=42)

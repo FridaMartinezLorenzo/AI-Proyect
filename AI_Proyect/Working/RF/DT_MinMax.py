@@ -23,11 +23,11 @@ y_test = y_test.values.ravel()
 feature_names = X_train.columns
 
 # Train the Random Forest model
-rf = RandomForestClassifier(n_estimators=166,
-                            max_depth=10,
-                            min_samples_split=9,
-                            min_samples_leaf=3,
-                            max_features='log2',
+rf = RandomForestClassifier(n_estimators=50,
+                            max_depth=None,
+                            min_samples_split=2,
+                            min_samples_leaf=1,
+                            max_features='sqrt',
                             bootstrap=True,
                             random_state=42)
 rf.fit(X_train, y_train)
