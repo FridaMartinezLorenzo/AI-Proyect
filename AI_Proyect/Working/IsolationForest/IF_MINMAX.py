@@ -14,7 +14,12 @@ X_test = test_data.drop(columns=['Label'])
 y_test = test_data['Label']
 
 # Initialize the Isolation Forest model
-iso_forest = IsolationForest(n_estimators=100, contamination=0.1, random_state=42)
+iso_forest = IsolationForest(bootstrap=False,
+                             contamination=0.1,
+                             max_features=0.5,
+                             max_samples=.75,
+                             n_estimators=200,
+                             random_state=42)
 
 # Fit the model on the training data
 iso_forest.fit(X_train)

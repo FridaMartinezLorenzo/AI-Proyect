@@ -39,6 +39,8 @@ y_test = y_test.values.ravel()
 # Get the feature names
 feature_names = X_train.columns
 
+print(X_test)
+
 # Train the Random Forest model
 rf = RandomForestClassifier(n_estimators=166,
                             max_depth=10,

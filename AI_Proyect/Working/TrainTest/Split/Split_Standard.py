@@ -2,7 +2,8 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 # Load the dataset
-EHMS = pd.read_csv('../../dataset_pre_processed_standard.csv')
+#EHMS = pd.read_csv('../../dataset_pre_processed_standard.csv')
+EHMS = pd.read_csv('../../dataset_pre_processed_standard_balanced.csv')
 df = pd.DataFrame(EHMS)
 
 # Split the dataset into features and labels
