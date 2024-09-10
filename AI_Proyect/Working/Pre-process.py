@@ -35,12 +35,12 @@ for col in categorical_columns:
     label_encoders[col] = le
 
 # Apply StandardScaler to all columns
-#scaler = StandardScaler()
-#df[df.columns] = scaler.fit_transform(df[df.columns])
+scaler = StandardScaler()
+df[df.columns] = scaler.fit_transform(df[df.columns])
 
 #Apply MinMaxScaler to all columns
-scaler = MinMaxScaler()
-df[df.columns] = scaler.fit_transform(df[df.columns])
+#scaler = MinMaxScaler()
+#df[df.columns] = scaler.fit_transform(df[df.columns])
 
 # Combine the features and labels
 df_with_label = pd.concat([df, label_column], axis=1)
@@ -60,5 +60,5 @@ df_resampled = pd.concat([pd.DataFrame(X_resampled, columns=X.columns), pd.Serie
 print(df_resampled.head())
 
 # Save the balanced and preprocessed dataset
-#df_resampled.to_csv('dataset_pre_processed_standard_balanced.csv', index=False)
-df_resampled.to_csv('dataset_pre_processed_minmax_balanced.csv', index=False)
+df_resampled.to_csv('dataset_pre_processed_standard_balanced.csv', index=False)
+#df_resampled.to_csv('dataset_pre_processed_minmax_balanced.csv', index=False)
